@@ -8,13 +8,13 @@ import pygame
 from pygame.locals import *
 
 
-X = 30
-Y = 30
-cell_size = 16
-
+X = 20
+Y = 20
+cell_size = 20
+display_w,display_h = X*cell_size, Y*cell_size
 
 class Snake():
-    def __init__(self,pos = [5,5],l = 5,auto = False):
+    def __init__(self,pos = [5,5],l = 7,auto = False):
         self.pos = [pos]
         x,y = pos
         for i in range(1,l):
@@ -23,6 +23,7 @@ class Snake():
         self.l = l
         self.auto = auto
         self.move_direction = 1
+        self.yellow_snake_pos = []
 
     def setting_egg(self):
         while True:
@@ -44,7 +45,6 @@ class Snake():
             else: moves.remove(2)
             next_move = np.random.choice(moves)
             self.move_direction = next_move
-        game_continue = True
         x = np.array([-1,1])
         y = np.array([-1,1])
         mov = np.array([[-1,0],[1,0],[0,-1],[0,1]]) # 0:upper 1:down 2:left 3:right
@@ -62,10 +62,12 @@ class Snake():
         if n_head[1] == -1:
             n_head[1] = Y-1
 
-        for pos in self.pos: # hit head
+        for pos in self.pos+self.yellow_snake_pos: # hit head
             if np.all(pos == n_head):
-                game_continue = False
+                gameover = True
                 break
+        else:
+            gameover = False
 
         #eat egg
         if np.all(n_head == self.egg_pos):
@@ -75,7 +77,7 @@ class Snake():
         else:
             self.pos.insert(0,n_head)
             self.pos = self.pos[:(self.l)]
-        return game_continue, self.pos
+        return gameover
 
     def draw_snake(self,screen,snake_pos):
         if self.auto: color = (255,224,32)
@@ -92,19 +94,18 @@ class Snake():
                 pygame.draw.rect(screen,color,(x*cell_size,y*cell_size,cell_size,cell_size))
         return screen
 
-def main():
-    snake = Snake()
-    yellow_snake = Snake(pos = [20,20],l = 10,auto = True)
-    game_continue = True
-    pygame.init()
-    screen = pygame.display.set_mode((X*cell_size,Y*cell_size))
-    pygame.display.set_caption("snake game")
-    move = 1
-    snake.setting_egg()
-    yellow_snake.egg_pos = snake.egg_pos
-    for i in range(10000):
-        stage = [[0 for y in range(Y)]for x in range(X)]
-        screen.fill((255,255,255))
+class Snake_game:
+    def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((display_w,display_h))
+        pygame.display.set_caption(u"snake game!")
+        self.init_game()
+        move = 1
+        while True:
+            self.update()
+            self.draw(self.screen)
+
+    def update(self):
         #イベント処理
         for event in pygame.event.get():
             #終了用イベント
@@ -117,25 +118,79 @@ def main():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-                if event.key == K_RIGHT and not(move == 0): move = 1
-                if event.key == K_LEFT and not(move == 1): move = 0
-                if event.key == K_UP and not(move==3): move = 2
-                if event.key == K_DOWN and not(move == 2): move = 3
+                if event.key == K_SPACE and self.game_state == "START": self.game_state = "PLAY" # game start
+                if event.key == K_SPACE and self.game_state == "GAMEOVER": self.init_game() # game start
+                if self.game_state == "PLAY":
+                    if event.key == K_h and not(self.move == 1): self.move = 0
+                    if event.key == K_j and not(self.move == 2): self.move = 3
+                    if event.key == K_k and not(self.move==3): self.move = 2
+                    if event.key == K_l and not(self.move == 0): self.move = 1
+                    if event.key == K_RIGHT and not(self.move == 0): self.move = 1
+                    if event.key == K_LEFT and not(self.move == 1): self.move = 0
+                    if event.key == K_UP and not(self.move==3): self.move = 2
+                    if event.key == K_DOWN and not(self.move == 2): self.move = 3
 
-        game_continue,snake_pos = snake.move(move)
-        yellow_snake.egg_pos = snake.egg_pos
-        _,yellow_snake_pos = yellow_snake.move()
+        self.snake.yellow_snake_pos = self.yellow_snake.pos
+        gameover = self.snake.move(self.move)
+        if gameover:
+            self.game_state = "GAMEOVER"
+        self.yellow_snake.egg_pos = self.snake.egg_pos
+        self.yellow_snake.move()
+        time.sleep(self.sleep_time)
 
-        screen = snake.draw_snake(screen,snake_pos)
-        screen = yellow_snake.draw_snake(screen,yellow_snake_pos)
+    def text_objects(self,text, font):
+        textSurface = font.render(text, True, (0,0,0))
+        return textSurface, textSurface.get_rect()
 
-        # draw egg
-        pygame.draw.rect(screen,(255,0,0),(snake.egg_pos[0]*cell_size,snake.egg_pos[1]*cell_size,cell_size,cell_size))
+    def draw(self,screen):
+        self.screen.fill((255,255,255))
+        title_font = pygame.font.Font("freesansbold.ttf",30)
+        sub_title_font = pygame.font.Font("freesansbold.ttf",20)
+        sub_sub_title_font = pygame.font.Font("freesansbold.ttf",10)
+        if self.game_state == "START":
+            TextSurf,TextRect = self.text_objects("Python SNAKE GAME", title_font)
+            TextRect.center = ((display_w/2),(display_h/4))
+            self.screen.blit(TextSurf,TextRect)
+            TextSurf,TextRect = self.text_objects("START", sub_title_font)
+            TextRect.center = ((display_w/2),(display_h/2))
+            # self.screen.blit(TextSurf,TextRect)
+            TextSurf,TextRect = self.text_objects("push space button to start", sub_title_font)
+            TextRect.center = ((display_w/2),(display_h*0.7))
+            self.screen.blit(TextSurf,TextRect)
+
+        elif self.game_state == "PLAY":
+            self.screen = self.snake.draw_snake(self.screen,self.snake.pos)
+            self.screen = self.yellow_snake.draw_snake(self.screen,self.yellow_snake.pos)
+            # draw egg
+            pygame.draw.rect(self.screen,(255,0,0),(self.snake.egg_pos[0]*cell_size,self.snake.egg_pos[1]*cell_size,cell_size,cell_size))
+
+        elif self.game_state == "GAMEOVER": # GAME OVERを描画
+            self.screen = self.snake.draw_snake(self.screen,self.snake.pos)
+            self.screen = self.yellow_snake.draw_snake(self.screen,self.yellow_snake.pos)
+            # draw egg
+            pygame.draw.rect(self.screen,(255,0,0),(self.snake.egg_pos[0]*cell_size,self.snake.egg_pos[1]*cell_size,cell_size,cell_size))
+            TextSurf,TextRect = self.text_objects("GAME OVER", sub_title_font)
+            TextRect.center = ((display_w/2),(display_h/2))
+            self.screen.blit(TextSurf,TextRect)
+            TextSurf,TextRect = self.text_objects("push space button to restart", sub_title_font)
+            TextRect.center = ((display_w/2),(display_h*0.6))
+            self.screen.blit(TextSurf,TextRect)
+
         pygame.display.update()
-        time.sleep(0.1)
-        if game_continue == False:
-            print("GAME OVER")
-            break
+
+    def init_game(self):
+        self.snake = Snake()
+        self.yellow_snake = Snake(pos = [10,10],l = 5,auto = True)
+        self.move = 1
+        self.snake.setting_egg()
+        self.yellow_snake.egg_pos = self.snake.egg_pos
+        self.yellow_snake_pos = []
+        self.game_state = "START"
+        self.sleep_time = 0.05
+
+def main():
+    game = Snake_game()
+    return 0
 
 if __name__ == "__main__":
     main()
