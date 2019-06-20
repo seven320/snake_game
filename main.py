@@ -84,15 +84,16 @@ class Snake():
         else: color = (0,32,255)
         for i,pos in enumerate(snake_pos): # draw snake
             x,y = pos
-            if i == 0:
-                 # head
+            if i != 0:
+                pygame.draw.rect(screen,color,(x*cell_size,y*cell_size,cell_size,cell_size))
+            else:
+                # head
                 pygame.draw.rect(screen,color,(x*cell_size,y*cell_size,cell_size,cell_size))
                 if self.move_direction == 0 or self.move_direction == 1: eye = [0,-3]
                 elif self.move_direction == 2 or self.move_direction == 3: eye = [-3,0]
                 pygame.draw.circle(screen,(255,255,255),(x*cell_size+cell_size//2+eye[0],y*cell_size+cell_size//2+eye[1]),3)
-            else:
-                pygame.draw.rect(screen,color,(x*cell_size,y*cell_size,cell_size,cell_size))
         return screen
+
 
 class Snake_game:
     def __init__(self):
@@ -148,14 +149,16 @@ class Snake_game:
         sub_title_font = pygame.font.Font("freesansbold.ttf",20)
         sub_sub_title_font = pygame.font.Font("freesansbold.ttf",10)
         if self.game_state == "START":
+            python_img = pygame.image.load("python.png")
+            self.screen.blit(python_img,(display_h/8,display_w/8))
             TextSurf,TextRect = self.text_objects("Python SNAKE GAME", title_font)
-            TextRect.center = ((display_w/2),(display_h/4))
+            TextRect.center = ((display_w/2),(display_h*0.15))
             self.screen.blit(TextSurf,TextRect)
             TextSurf,TextRect = self.text_objects("START", sub_title_font)
-            TextRect.center = ((display_w/2),(display_h/2))
+            TextRect.center = ((display_w/2,display_h*0.9))
             # self.screen.blit(TextSurf,TextRect)
             TextSurf,TextRect = self.text_objects("push space button to start", sub_title_font)
-            TextRect.center = ((display_w/2),(display_h*0.7))
+            TextRect.center = ((display_w/2),(display_h*0.9))
             self.screen.blit(TextSurf,TextRect)
 
         elif self.game_state == "PLAY":
@@ -186,7 +189,7 @@ class Snake_game:
         self.yellow_snake.egg_pos = self.snake.egg_pos
         self.yellow_snake_pos = []
         self.game_state = "START"
-        self.sleep_time = 0.05
+        self.sleep_time = 0.1
 
 def main():
     game = Snake_game()
