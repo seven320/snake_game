@@ -27,14 +27,14 @@ python main.py
 In game display, you can click and drug to make new cell or delete it.
 just make and see your cells and life.
 
-```space key``` start game and restart game  
+```space key``` start game and restart game
 ```→```  move right
 ```←``` move left
 ```↑```  move up
-```↓``` move down   　
+```↓``` move down    　
 
 
-vim key
+vim key 
 ```l```  move right
 ```h``` move left
 ```k```  move up
