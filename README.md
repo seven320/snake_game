@@ -1,9 +1,7 @@
 # Snake Game
+![ out](https://user-images.githubusercontent.com/33506506/59820839-598ef880-9366-11e9-8420-21f937958cf7.gif)
 
 <img width="402" alt="sample2" src="https://user-images.githubusercontent.com/33506506/59819466-f059b600-9362-11e9-805e-d39364b61742.png">
-
-
-![ out](https://user-images.githubusercontent.com/33506506/59820839-598ef880-9366-11e9-8420-21f937958cf7.gif)
 
 ## About
 You can play snake game with python.
@@ -31,13 +29,13 @@ just make and see your cells and life.
 
 ```space key``` start game and restart game  
 ```→```  move right
-```←``` move left 　
-```↑```  move up  
-```↓``` move down  　
+```←``` move left
+```↑```  move up
+```↓``` move down   　
 
 
 vim key
 ```l```  move right
-```h``` move left 　
-```k```  move up  
-```j``` move down  
+```h``` move left
+```k```  move up
+```j``` move down
