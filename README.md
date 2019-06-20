@@ -1,8 +1,9 @@
 # Snake Game
 
-https://user-images.githubusercontent.com/33506506/59819466-f059b600-9362-11e9-805e-d39364b61742.png
+<img width="402" alt="sample2" src="https://user-images.githubusercontent.com/33506506/59819466-f059b600-9362-11e9-805e-d39364b61742.png">
 
-https://user-images.githufbusercontent.com/33506506/59819791-627eca80-9364-11e9-9e68-8eda892174db.gi
+![demo](https://user-images.githufbusercontent.com/33506506/59819791-627eca80-9364-11e9-9e68-8eda892174db.gif)
+
 ## About
 You can play snake game with python.
 
