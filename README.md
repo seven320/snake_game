@@ -9,12 +9,9 @@ You can play snake game with python.
 
 ## Getting Started  
 to play this game you need to install pygame and numpy.  
-### install pygame
+### install pygame, numpy
 ```
-pip install pygame
-```
-### install NumPy
-```
+pip install pygame  
 pip install numpy
 ```
 
@@ -31,11 +28,11 @@ just make and see your cells and life.
 ```→```  move right
 ```←``` move left
 ```↑```  move up
-```↓``` move down    　
-
+```↓``` move down  
 
 vim key 
-```l```  move right
-```h``` move left
-```k```  move up
-```j``` move down
+```l```,
+```h```,
+```k```,
+```j```,
+also can be used!
