@@ -6,6 +6,7 @@ import time
 # import queue
 import pygame
 from pygame.locals import *
+import copy
 
 
 X = 20
@@ -87,13 +88,13 @@ class Snake():
             if i != 0:
                 pygame.draw.rect(screen,color,(x*cell_size,y*cell_size,cell_size,cell_size))
             else:
-                # head
-                pygame.draw.rect(screen,color,(x*cell_size,y*cell_size,cell_size,cell_size))
-                if self.move_direction == 0 or self.move_direction == 1: eye = [0,-3]
-                elif self.move_direction == 2 or self.move_direction == 3: eye = [-3,0]
-                pygame.draw.circle(screen,(255,255,255),(x*cell_size+cell_size//2+eye[0],y*cell_size+cell_size//2+eye[1]),3)
+                x_head,y_head = x,y
+        # head
+        pygame.draw.rect(screen,color,(x_head*cell_size,y_head*cell_size,cell_size,cell_size))
+        if self.move_direction == 0 or self.move_direction == 1: eye = [0,-3]
+        elif self.move_direction == 2 or self.move_direction == 3: eye = [-3,0]
+        pygame.draw.circle(screen,(255,255,255),(x_head*cell_size+cell_size//2+eye[0],y_head*cell_size+cell_size//2+eye[1]),3)
         return screen
-
 
 class Snake_game:
     def __init__(self):
